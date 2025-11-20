@@ -1,0 +1,96 @@
+<div class="container mt-4">
+    <h1 class="text-start mb-3">Recuperatorio Parcial 2</h1>
+
+    <div class="text-end mb-3">
+        <button class="btn btn-outline-primary" (click)="scrollToBottom()">Ir al final</button>
+    </div>
+
+    @if(loading){
+        <div class="text-center mt-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Cargando Posts...</p>
+        </div>
+    }
+
+    @if(errorMessage){
+        <div class="alert alert-info">
+            <strong>ERROR: </strong>{{errorMessage}}
+            <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Tabla -->
+     @if(!loading){
+
+         @if(posts.length > 0){
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Url</th>
+                    <th scope="col">Album Id</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(p of postToShow; track p.id){
+                    <tr>
+                        <td>{{p.id}}</td>
+                        <td>{{p.title}}</td>
+                        <td class="text-truncate" style="max-width: 200px;" [title]="p.url">{{p.url}}</td>
+                        <td>{{p.albumId}}</td>
+                        <td class="text-center">
+                            <button class="btn btn-primary btn-sm me-1" (click)="openEditModal(p)" title="Editar Post"> <i class="bi bi-pencil-fill"></i>Editar</button>
+                            <button class="btn btn-danger btn-sm" (click)="delete(p.id!)" title="Eliminar Post"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                        </td>
+                    </tr>
+                }
+                <tr class="table-success">
+                    <td><strong>Nuevo</strong></td>
+                    <td>
+                        <input type="text" [(ngModel)]="newPost.title" class="form-control form-control-sm" placeholder="Nuevo titulo" required>
+                    </td>
+                    <td>
+                        <input type="text" [(ngModel)]="newPost.url" class="form-control form-control-sm" placeholder="https://ejemplo.com/image.jpg" required >
+                    </td>
+                    <td>
+                        <input type="number"[(ngModel)]="newPost.albumId" class="form-control form-control-sm" placeholder="1" min="1">
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-success btn-sm" (click)="save()" title="Agregar nuevo post"> <i class="bi bi-plus-circle-fill"></i>Agregar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }@else{
+        <div class="alert alert-secondary text-center" role="alert">
+            <i class="bi bi-inbox"></i>
+            <p class="mb-0">No hay posts disponibles.</p>
+        </div>
+    }
+}
+
+     <!-- Modal -->
+     <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Editar Post</h5>
+                    <button type="button" class="btn-close" (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <input [(ngModel)]="editPost!.title" class="form-control mb-2" placeholder="Título" />
+                    <textarea [(ngModel)]="editPost!.url" class="form-control" placeholder="Url"></textarea>
+                    <input [(ngModel)]="editPost!.albumId" class="form-control" placeholder="albumId">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                    <button class="btn btn-success" (click)="update()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
